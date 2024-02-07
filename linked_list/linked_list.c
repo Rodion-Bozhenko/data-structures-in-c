@@ -108,6 +108,55 @@ void list_remove_at(ListNode **head, size_t index) {
   current->next = next;
 }
 
+void list_insert_at(ListNode **head, size_t index, void *data) {
+  ListNode* new_node = list_new(data);
+
+  if (index == 0 || *head == NULL) {
+    new_node->next = *head;
+    *head = new_node;
+    return;
+  }
+
+  size_t i = 0;
+  ListNode* current = *head;
+  while (i < index - 1 && current != NULL) {
+    current = current->next;
+    i++;
+  }
+
+  if (current == NULL) {
+    free(new_node);
+    return;
+  }
+
+  new_node->next = current->next;
+  current->next = new_node;
+}
+
+ListNode *list_find_by_at(ListNode *head, size_t index) {
+  ListNode *current = head;
+  size_t i = 0;
+  while (i != index && current != NULL) {
+    current = current->next;
+    i++;
+  }
+
+  return current;
+}
+
+
+ListNode *list_find(ListNode *head, MatchCallback match) {
+  ListNode *current = head;
+  while (current != NULL) {
+    if (match(current->data)) {
+      return current;
+    }
+    current =  current->next;
+  }
+
+  return NULL;
+}
+
 size_t list_len(ListNode **head) {
   size_t len = 0;
 
