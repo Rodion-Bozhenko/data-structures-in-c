@@ -1,4 +1,5 @@
 #include "stack.h"
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,6 +50,24 @@ int stack_pop(Stack *s, void* elem) {
   return 0;
 }
 
+int stack_peek(Stack *s, void* elem) {
+  if (s->size == 0) {
+    return -1;
+  }
+
+  void *source = (char*)s->items + ((s->size - 1) * s->elem_size);
+
+  if (elem != NULL) {
+    memcpy(elem, source, s->elem_size);
+  }
+
+  return 0;
+}
+
+bool stack_empty(Stack *s) {
+  return s->size == 0;
+}
+
 void stack_test() {
   typedef struct {
     int foo;
@@ -69,6 +88,7 @@ void stack_test() {
   for (size_t i = 0; i < stack.size; i++) {
     printf("STACK %zu %d %s\n", i, ((Foo*)stack.items + i)->foo, ((Foo *)stack.items + i)->bar);
   }
+  printf("IS EMPTY %d\n", stack_empty(&stack));
   Foo popped;
   stack_pop(&stack, &popped);
   stack_pop(&stack, NULL);
@@ -76,4 +96,11 @@ void stack_test() {
   for (size_t i = 0; i < stack.size; i++) {
     printf("STACK %zu %d %s\n", i, ((Foo*)stack.items + i)->foo, ((Foo *)stack.items + i)->bar);
   }
+  Foo peeked;
+  stack_peek(&stack, &peeked);
+  printf("PEEKED %d %s\n", peeked.foo, peeked.bar);
+  stack_pop(&stack, NULL);
+  stack_pop(&stack, NULL);
+  stack_pop(&stack, NULL);
+  printf("IS EMPTY %d\n", stack_empty(&stack));
 }
