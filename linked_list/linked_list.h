@@ -31,4 +31,6 @@ ListNode *list_find(ListNode *head, MatchCallback match);
 
 size_t list_len(ListNode **head);
 
+void linked_list_test();
+
 #endif
